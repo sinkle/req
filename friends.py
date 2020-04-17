@@ -3,7 +3,7 @@ import constants
 import datetime
 
 
-def dict_to_tuples_list(dictionary):
+def dict_to_list_of_tuples(dictionary):
     l = []
     for key in dictionary:
         l.append((key, dictionary[key]))
@@ -53,29 +53,23 @@ def count_number_age(dict_age, age):
         dict_age[age] = 1
     return dict_age[age]
 
-# d = {}
-# print(count_number_age(d, 25))
-# print(count_number_age(d, 25))
-# print(count_number_age(d, 25))
-# print(count_number_age(d, 22))
-# print(d)
-# l = []
-# for key in d:
-#     l.append((key, d[key]))
-# print(l)
-# exit()
 
-
-
-id = get_user_id("id254466147").json()['response'][0]['id']
-list_of_friends = get_friends(id)
-dict_ages = {}
-for i in list_of_friends.json()['response']['items']:
-    try:
-        age = how_old(i['bdate'])
-    except KeyError:
-        continue
-    if age is None:
-        continue
-    count_number_age(dict_ages, age)
-print(dict_to_tuples_list(dict_ages))
+if __name__ == '__main__':
+    data = input("Enter 'user_id' or 'username'\n")
+    if not isinstance(data, int):
+        user_id = get_user_id("obzzzen").json()['response'][0]['id']
+    else:
+        user_id = data
+    list_of_friends = get_friends(user_id)
+    dict_ages = {}
+    for i in list_of_friends.json()['response']['items']:
+        try:
+            age = how_old(i['bdate'])
+        except KeyError:
+            continue
+        if age is None:
+            continue
+        count_number_age(dict_ages, age)
+    res_without_sort = dict_to_list_of_tuples(dict_ages)
+    res = sorted(res_without_sort, key=lambda tup: tup[0], reverse=True)
+    print(res)
